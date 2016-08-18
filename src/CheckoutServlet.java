@@ -28,8 +28,9 @@ public class CheckoutServlet extends HttpServlet {
     private Connection con;
     private String host = "jdbc:mysql://localhost:3306/cs3520";
     private String uName = "root";
-    private String pswd="root";
-    private String b_addr="";
+    private String pswd = "root";
+    private String b_addr = "";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,7 +48,7 @@ public class CheckoutServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CheckoutServlet</title>");            
+            out.println("<title>Servlet CheckoutServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet CheckoutServlet at " + request.getContextPath() + "</h1>");
@@ -82,25 +83,25 @@ public class CheckoutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
-            String url="/Hello.jsp";
+            String url = "/Hello.jsp";
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(host, uName, pswd);
-            
-            String query = "select * " +
-                    "from " + "user";
-            
-            stmt = con.createStatement();           
+
+            String query = "select * "
+                    + "from " + "user";
+
+            stmt = con.createStatement();
             ResultSet rs;
-            HttpSession session= request.getSession();
+            HttpSession session = request.getSession();
             rs = stmt.executeQuery(query);
-            User user=new User();
-            user = (User)session.getAttribute("user");
-            String email=user.getEmail();
-            request.setAttribute("userEmail",email);
-            request.setAttribute("userAddr",user.getAddr());
-            url="/Checkout.jsp";
+            User user = new User();
+            user = (User) session.getAttribute("user");
+            String email = user.getEmail();
+            request.setAttribute("userEmail", email);
+            request.setAttribute("userAddr", user.getAddr());
+            url = "/Checkout.jsp";
 //            while (rs.next()) {
 //                String dbemail = rs.getString("email");
 //                if(email.equals(dbemail))
@@ -114,13 +115,12 @@ public class CheckoutServlet extends HttpServlet {
 //                     url="/Checkout.jsp";
 //                }
 //            }
-            
+
             getServletContext().getRequestDispatcher(url).forward(request, response);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CheckoutServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
 
     /**
