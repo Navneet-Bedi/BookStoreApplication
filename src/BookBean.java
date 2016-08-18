@@ -4,27 +4,26 @@
  * and open the template in the editor.
  */
 
-
 /**
  *
  * @author Navneet
  */
 public class BookBean {
- 
+
     private int id;
     private String title;
     private String author;
     private String category;
     private int price;
     private int qty;
-    
+
     public BookBean() {
         this.id = 0;
         this.title = "";
         this.author = "";
         this.category = "";
         this.price = 0;
-        this.qty =0;
+        this.qty = 0;
     }
 
     public BookBean(int id, String title, String author, String category, int price, int qty) {
@@ -35,7 +34,8 @@ public class BookBean {
         this.price = price;
         this.qty = qty;
     }
-      public BookBean(String title, String author, String category, int price, int qty) {
+
+    public BookBean(String title, String author, String category, int price, int qty) {
 
         this.title = title;
         this.author = author;
@@ -50,8 +50,6 @@ public class BookBean {
         this.category = category;
         this.price = price;
     }
-    
-    
 
     public int getId() {
         return id;
@@ -100,8 +98,5 @@ public class BookBean {
     public void setQty(int qty) {
         this.qty = qty;
     }
-    
-    
 
-      
 }
