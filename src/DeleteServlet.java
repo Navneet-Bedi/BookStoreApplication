@@ -36,7 +36,7 @@ public class DeleteServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteServlet</title>");            
+            out.println("<title>Servlet DeleteServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet DeleteServlet at " + request.getContextPath() + "</h1>");
@@ -71,28 +71,25 @@ public class DeleteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String[] delItem = request.getParameterValues("delItem");
-        HttpSession session=request.getSession(false);
-       // List<BookBean> items= (List<BookBean>)session.getAttribute("cartlist");
-        
-        
-        Iterator<BookBean> ite = Cart.items.iterator();
-          while(ite.hasNext()) {
 
-               String title = ite.next().getTitle();
-               for(int j=0;j<delItem.length;j++)
-                {
-                    if(title.equals(delItem[j]))
-                        {
-                            ite.remove();
-                        }
-                 } 
-               
-          }
-        
-       String url="/DisplayCart.jsp";
-       getServletContext().getRequestDispatcher(url).forward(request, response);
+        String[] delItem = request.getParameterValues("delItem");
+        HttpSession session = request.getSession(false);
+        // List<BookBean> items= (List<BookBean>)session.getAttribute("cartlist");
+
+        Iterator<BookBean> ite = Cart.items.iterator();
+        while (ite.hasNext()) {
+
+            String title = ite.next().getTitle();
+            for (int j = 0; j < delItem.length; j++) {
+                if (title.equals(delItem[j])) {
+                    ite.remove();
+                }
+            }
+
+        }
+
+        String url = "/DisplayCart.jsp";
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     /**
