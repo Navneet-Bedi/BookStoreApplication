@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 23, 2016, 7:28:30 PM
+    Author     : Navneet
+*/
+
+
+
+            h2,h3,label,p{
+                alignment-adjust:central;
+                color: blue;
+                font-family: cursive;
+            }
+            input{
+                align-self: flex-end;
+                color: black;
+                font-family: serif;
+                background: powderblue;
+                font-size: medium;
+            }
+            
+            span{
+                color: green;
+                font-family: cursive;
+            }
+            
+            table, th , td  {
+                border: 2px solid grey;
+                border-collapse: collapse;
+                padding: 5px;
+                color: blue;
+                font-family: cursive;
+                align-content: flex-end;
+            }
+            table tr:nth-child(odd)	{
+                background-color: #f1f1f1;
+            }
+            table tr:nth-child(even) {
+                background-color: #ffffff;
+            }
+
+
