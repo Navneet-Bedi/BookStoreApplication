@@ -25,17 +25,18 @@ import javax.servlet.http.HttpServletResponse;
  * @author sanaali
  */
 public class DelBookServlet extends HttpServlet {
-    
-    public List<BookBean> bookList=new ArrayList<BookBean>();
+
+    public List<BookBean> bookList = new ArrayList<BookBean>();
     private Statement stmt;
     private Connection con;
 
-    private String b_title="";
-    private String b_author="";
-    private String b_category="";
-    private int b_id=0;
-    private int b_price=0;
-    private int b_qty=0;
+    private String b_title = "";
+    private String b_author = "";
+    private String b_category = "";
+    private int b_id = 0;
+    private int b_price = 0;
+    private int b_qty = 0;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,7 +54,7 @@ public class DelBookServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DelBookServlet</title>");            
+            out.println("<title>Servlet DelBookServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet DelBookServlet at " + request.getContextPath() + "</h1>");
@@ -88,47 +89,45 @@ public class DelBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
+
         try {
             String[] bookId = request.getParameterValues("bookId");
             Statement stmt;
             Connection con;
             String host = "jdbc:mysql://localhost:3306/cs3520";
             String uName = "root";
-            String pswd="root";
-            int r=0;
+            String pswd = "root";
+            int r = 0;
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(host, uName, pswd);
-            
-            for(int i=0; i<bookId.length; i++)
-            {
-                PreparedStatement ps=con.prepareStatement("delete from books where title=?");
-                ps.setString(1,bookId[i]);
+
+            for (int i = 0; i < bookId.length; i++) {
+                PreparedStatement ps = con.prepareStatement("delete from books where title=?");
+                ps.setString(1, bookId[i]);
                 ps.executeUpdate();
             }
-            
-            String url="/AdminSearchResults.jsp";
+
+            String url = "/AdminSearchResults.jsp";
             String query = "select * from books";
-                   
-                   stmt = con.createStatement();
-                   ResultSet rs;
-                   rs = stmt.executeQuery(query);
-                   bookList.clear();
-                 while(rs.next()){                                          
-                       b_title=rs.getString("title");
-                       b_author=rs.getString("author");
-                       b_category=rs.getString("category");
-                       b_price=rs.getInt("price");
-                       b_qty=rs.getInt("qty");
-                       bookList.add(new BookBean(b_title,b_author,b_category,b_price));
- //                   url="/AdminSearchResults.jsp";
-                   }
-            int size=bookList.size(); 
-            request.setAttribute("list",bookList);
-             request.setAttribute("results",size);
+
+            stmt = con.createStatement();
+            ResultSet rs;
+            rs = stmt.executeQuery(query);
+            bookList.clear();
+            while (rs.next()) {
+                b_title = rs.getString("title");
+                b_author = rs.getString("author");
+                b_category = rs.getString("category");
+                b_price = rs.getInt("price");
+                b_qty = rs.getInt("qty");
+                bookList.add(new BookBean(b_title, b_author, b_category, b_price));
+                //                   url="/AdminSearchResults.jsp";
+            }
+            int size = bookList.size();
+            request.setAttribute("list", bookList);
+            request.setAttribute("results", size);
             getServletContext().getRequestDispatcher(url).forward(request, response);
-            
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DelBookServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
