@@ -3,21 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.util.*;
-import java.sql.*;
-import java.util.logging.Level;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Navneet
  */
-@WebServlet(urlPatterns = {"/AddBookToStock"})
-public class AddBookToStock extends HttpServlet {
+public class AdminOperations extends HttpServlet {
 
     public List<BookBean> bookList = new ArrayList<BookBean>();
     ;
@@ -44,7 +48,19 @@ public class AddBookToStock extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet AdminOperations</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet AdminOperations at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -73,59 +89,110 @@ public class AddBookToStock extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String url = "/FormNewBook.jsp";
+        String title;
+        String author;
+        int size = 0;
+        String url = "/StockDetails.jsp";
         String action = request.getParameter("action");
-        if (action.equals("addBook")) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection(host, uName, pswd);
-                String query;
+        String radioButton = request.getParameter("adminOp");
+        if (action.equals("admnOp")) {
+            if (radioButton.equals("view")) {
+                try {
+                    bookList.clear();
+                    Class.forName("com.mysql.jdbc.Driver");
+                    con = DriverManager.getConnection(host, uName, pswd);
+                    String query = "select * from books";
 
-                stmt = con.createStatement();
-                ResultSet rs;
-                int rowCnt = 0;
-                b_title = request.getParameter("title");
-                b_author = request.getParameter("author");
-                b_category = request.getParameter("category");
-                b_price = Integer.parseInt(request.getParameter("price"));
-                b_qty = Integer.parseInt(request.getParameter("qty"));
+                    stmt = con.createStatement();
+                    ResultSet rs;
+                    rs = stmt.executeQuery(query);
+                    if (rs == null) {
+                        url = "/ShopBooks.jsp";
+                    }
 
-                query = "select * from books";
-                rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    rowCnt++;
+                    while (rs.next()) {
+                        b_title = rs.getString("title");
+                        b_author = rs.getString("author");
+                        b_category = rs.getString("category");
+                        b_price = rs.getInt("price");
+                        b_qty = rs.getInt("qty");
+                        bookList.add(new BookBean(b_title, b_author, b_category, b_price));
+                        url = "/AdminSearchResults.jsp";
+                    }
+                    size = bookList.size();
+                    request.setAttribute("list", bookList);
+                    request.setAttribute("results", size);
+                } catch (SQLException | ClassNotFoundException ex) {
+
                 }
-
-                b_id = rowCnt + 1;
-                query = "insert into books (title, author, category, price, qty) values (?,?,?,?,?)";
-                PreparedStatement statement = con.prepareStatement(query);
-                statement.setString(1, b_title);
-                statement.setString(2, b_author);
-                statement.setString(3, b_category);
-                statement.setInt(4, b_price);
-                statement.setInt(5, b_qty);
-                statement.executeUpdate();
-
-                query = "select * from books";
-                rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    b_title = rs.getString("title");
-                    b_author = rs.getString("author");
-                    b_category = rs.getString("category");
-                    b_price = rs.getInt("price");
-                    b_qty = rs.getInt("qty");
-                    bookList.add(new BookBean(b_title, b_author, b_category, b_price, b_qty));
-                    url = "/AdminSearchResults.jsp";
-                }
-                int size = bookList.size();
-                request.setAttribute("list", bookList);
-                request.setAttribute("results", size);
-            } catch (SQLException | ClassNotFoundException ex) {
-
             }
+            if (radioButton.equals("remove")) {
+                try {
+                    bookList.clear();
+                    Class.forName("com.mysql.jdbc.Driver");
+                    con = DriverManager.getConnection(host, uName, pswd);
+                    String query = "select * from books";
+
+                    stmt = con.createStatement();
+                    ResultSet rs;
+                    rs = stmt.executeQuery(query);
+                    if (rs == null) {
+                        url = "/ShopBooks.jsp";
+                    }
+
+                    while (rs.next()) {
+                        b_title = rs.getString("title");
+                        b_author = rs.getString("author");
+                        b_category = rs.getString("category");
+                        b_price = rs.getInt("price");
+                        b_qty = rs.getInt("qty");
+                        bookList.add(new BookBean(b_title, b_author, b_category, b_price));
+
+                    }
+                    size = bookList.size();
+                    request.setAttribute("list", bookList);
+                    request.setAttribute("results", size);
+                } catch (SQLException | ClassNotFoundException ex) {
+
+                }
+                url = "/DeleteBook.jsp";
+            }
+
+            if (radioButton.equals("modify")) {
+                try {
+                    bookList.clear();
+                    Class.forName("com.mysql.jdbc.Driver");
+                    con = DriverManager.getConnection(host, uName, pswd);
+                    String query = "select * from books";
+
+                    stmt = con.createStatement();
+                    ResultSet rs;
+                    rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        b_title = rs.getString("title");
+                        b_author = rs.getString("author");
+                        b_category = rs.getString("category");
+                        b_price = rs.getInt("price");
+                        b_qty = rs.getInt("qty");
+                        bookList.add(new BookBean(b_title, b_author, b_category, b_price));
+
+                    }
+                    size = bookList.size();
+                    request.setAttribute("list", bookList);
+                    request.setAttribute("results", size);
+                } catch (SQLException | ClassNotFoundException ex) {
+
+                }
+                url = "/ModifyBook.jsp";
+            }
+            if (radioButton.equals("add")) {
+                url = "/FormNewBook.jsp";
+            }
+
         }
+
         getServletContext().getRequestDispatcher(url).forward(request, response);
+
     }
 
     /**
